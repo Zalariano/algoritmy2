@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class IntegerListImpl implements IntegerList {
 
-    private final Integer[] storage;
+    protected final Integer[] storage;
     private int size;
 
     public IntegerListImpl() {
@@ -157,6 +157,22 @@ public class IntegerListImpl implements IntegerList {
                 j--;
             }
             arr[j] = temp;
+        }
+    }
+
+    void compress() {
+        for (int i = 0; i < storage.length; i++) {
+            if (storage[i] != null) {
+                continue;
+            }
+
+            for (int j = i; j < storage.length; j++) {
+                if (storage[j] != null) {
+                    storage[i] = storage[j];
+                    storage[j] = null;
+                    break;
+                }
+            }
         }
     }
     private  boolean bynarySearch(Integer [] arr,Integer item){
