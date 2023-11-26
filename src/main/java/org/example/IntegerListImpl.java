@@ -2,13 +2,12 @@ package org.example;
 
 import org.example.exceptions.InvalidIndexException;
 import org.example.exceptions.NullItemException;
-import org.example.exceptions.StorageIsFullException;
 
 import java.util.Arrays;
 
 public class IntegerListImpl implements IntegerList {
 
-    protected final Integer[] storage;
+    protected Integer[] storage;
     private int size;
 
     public IntegerListImpl() {
@@ -27,7 +26,7 @@ public class IntegerListImpl implements IntegerList {
 
     private void validateSize() {
         if (size == storage.length) {
-            throw new StorageIsFullException();
+            grow();
         }
     }
 
@@ -92,9 +91,9 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public boolean contains(Integer item) {
-        Integer [] storageCopy = toArray();
-        sort(storageCopy);
-        return bynarySearch(storageCopy,item);
+        Integer[] storageCopy = toArray();
+        sortRecurse(storageCopy);
+        return bynarySearch(storageCopy, item);
     }
 
     @Override
@@ -148,16 +147,8 @@ public class IntegerListImpl implements IntegerList {
         return Arrays.copyOf(storage, size);
     }
 
-    private void sort(Integer [] arr) {
-        for (int i = 1; i < arr.length; i++) {
-            int temp = arr[i];
-            int j = i;
-            while (j > 0 && arr[j - 1] >= temp) {
-                arr[j] = arr[j - 1];
-                j--;
-            }
-            arr[j] = temp;
-        }
+    private void sortRecurse(Integer[] arr) {
+        quickSort(arr,0 , arr.length - 1);
     }
 
     void compress() {
@@ -175,7 +166,8 @@ public class IntegerListImpl implements IntegerList {
             }
         }
     }
-    private  boolean bynarySearch(Integer [] arr,Integer item){
+
+    private boolean bynarySearch(Integer[] arr, Integer item) {
         int min = 0;
         int max = arr.length - 1;
 
@@ -195,5 +187,41 @@ public class IntegerListImpl implements IntegerList {
         return false;
 
     }
+
+    private void grow() {
+        storage = Arrays.copyOf(storage, size + size / 2);
+    }
+
+    private void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    private static void swapElements(Integer[] arr, int i1, int i2) {
+        int temp = arr[i1];
+        arr[i1] = arr[i2];
+        arr[i2] = temp;
+    }
 }
+
 

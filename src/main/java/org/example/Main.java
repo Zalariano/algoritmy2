@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) {
-        IntegerList integerList = new SortedIntegerList(10);
+        IntegerList integerList = new SortedIntegerList(4);
         integerList.add(7);
         integerList.add(6);
         integerList.add(10);
@@ -20,7 +20,7 @@ public class Main {
         System.out.println(integerList.get(4));
         System.out.println(integerList.get(integerList.size() - 1));
 
-        findFastedSortMethod();
+
     }
 
     public static Integer[] generateRandomArray() {
